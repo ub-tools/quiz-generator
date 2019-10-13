@@ -23,33 +23,33 @@ to enter their answers.
 
 ```json
 {
-    'name' : 'Quiz Name',
-    'version' : 'Quiz version string',
-    'questions': [
+    "name": "Quiz Name",
+    "version": "Quiz version string",
+    "questions": [
         {
-            "type" : "sa",
-            "name" : "sa_question",
-            "prompt" : "Question Prompt",
-            "answer" : "Question Answer",
-            "help" : "Failed Question Response"
+            "type": "sa",
+            "name": "sa_question",
+            "prompt": "Question Prompt",
+            "answer": "Question Answer",
+            "help": "Failed Question Response"
         },
         {
-            "type" : "tf"
-            "name" : "tf_question",
-            "prompt" : "Question Prompt",
-            "answer" : true,
-            "help" : "failed question response"
+            "type": "tf"
+            "name": "tf_question",
+            "prompt": "Question Prompt",
+            "answer": true,
+            "help": "failed question response"
         },
         {
-            "type" : "mc",
-            "name" : "mc_question",
-            "prompt" : "Question Prompt",
-            "options" : [
+            "type": "mc",
+            "name": "mc_question",
+            "prompt": "Question Prompt",
+            "options": [
                 "Option 1",
                 "Option 2",
                 "Option 3"
             ],
-            "answer" : [ "1", "3" ],
+            "answer": [ "1", "3" ],
             "help": "failed question response"
         }
     ]
