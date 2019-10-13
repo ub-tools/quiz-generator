@@ -1,0 +1,53 @@
+{
+    "name": "Example Quiz",
+    "version": "1.0",
+    "questions": [
+        {
+            "type": "sa",
+            "name": "language_form",
+            "prompt": "What painful markup language does this generate?",
+            "answer": "HTML",
+            "help": "Press Ctrl+U"
+        },
+        {
+            "type": "sa",
+            "name": "language_example",
+            "prompt": [
+                {
+                    "type": "text",
+                    "value": "What terrible language is this?"
+                },
+                {
+                    "type": "code",
+                    "value": "x === \"\""
+                }
+            ],
+            "answer": "JavaScript",
+            "help": "Remember that the capitalization is stupid, too!"
+        },
+        {
+            "type": "tf",
+            "name": "terrible",
+            "prompt": [
+                {
+                    "type": "text",
+                    "value": "Is this a terrible process?"
+                }
+            ],
+            "answer": "true",
+            "help": "Think harder"
+        },
+        {
+            "type": "mc",
+            "name": "so_much_bad",
+            "prompt": "Which of these languages are terrible?",
+            "options": [
+                "C",
+                "JavaScript",
+                "Python"
+            ],
+            "answer": "2",
+            "help": "Hint: Python is written in C, and it's not either of those."
+        }
+    ]
+}

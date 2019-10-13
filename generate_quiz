@@ -1,0 +1,113 @@
+#!/usr/bin/python3
+
+# Copyright 2019 Vikram Singh, Ethan Blanton
+
+import argparse, json
+
+from yattag import Doc, indent
+
+def generate_autograder_form(json_questions, output_file):
+    '''Generate an autograder form.'''
+
+    # Set up a document for writing
+    doc, tag, text = Doc().tagtext()
+
+    # Start the form with a header
+    with tag('h3'):
+        text(json_questions['name'])
+
+    doc.stag('input', name="version", id="version", type="hidden", value=json_questions['version'])
+
+    # Create an unordered list
+    with tag('ul'):
+
+        # For each question, generate a form object
+        for (index, question_object) in enumerate(json_questions['questions']):
+
+            problem_number = "Problem " + str(index + 1) + ":"
+            problem_name = question_object['name']
+
+            # add a list element with an input form
+            with tag('li'):
+                with tag('b'):
+                    text(problem_number)
+                doc.stag('br')
+
+                if isinstance(question_object['prompt'], str):
+                    with tag('p'):
+                        text(question_object['prompt'])
+                else:
+                    for prompt_item in question_object['prompt']:
+                        if isinstance(prompt_item, str):
+                            print("Emitting %s" % prompt_item)
+                            with tag('p'):
+                                text(prompt_item)
+                        elif prompt_item['type'] == 'text':
+                            with tag('p'):
+                                text(prompt_item['value'])
+                        elif prompt_item['type'] == 'raw':
+                            doc.asis(prompt_item['value'])
+                        else:
+                            with tag('code'):
+                                text(prompt_item['value'])
+                                doc.stag('p')
+
+                if question_object['type'] == 'sa':
+                    doc.stag('input', name=problem_name, id=problem_name, type="text")
+                elif question_object['type'] == 'tf':
+                    with tag('select', name=problem_name, id=problem_name):
+                        doc.stag('option', value='')
+                        with tag('option', value='true'):
+                            text("True")
+                        with tag('option', value='false'):
+                            text('False')
+                elif question_object['type'] == 'mc':
+                    with tag('div'):
+                        with tag('select', name=problem_name, id=problem_name):
+                            doc.stag('option', value='')
+                            value = 0
+                            for option in question_object['options']:
+                                value += 1
+                                with tag('div'):
+                                    with tag('option', value=value):
+                                        text(option)
+                doc.stag('hr')
+
+    # Write key to the file
+    with open(output_file, 'w') as form_output:
+        form_html = indent(doc.getvalue())
+        form_output.write(form_html)
+
+def generate_quiz_key(json_questions, output_file):
+    '''Generate a key for grading student submissions.'''
+
+    key_dictionary = {}
+
+    key_dictionary['version'] = json_questions['version']
+
+    # For each question, add it to the key dictionary
+    for (index, question_object) in enumerate(json_questions['questions']):
+        # Create json object for the individual question
+        question_dictionary = {}
+        question_dictionary['value'] = question_object['answer']
+        question_dictionary['question'] = (index + 1)
+        question_dictionary['description'] = question_object['help']
+
+        # Save question to key json
+        key_dictionary[question_object['name']] = question_dictionary
+
+    # Write key to the file
+    with open(output_file, 'w') as key_output:
+        json.dump(key_dictionary, key_output)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('questions', help='JSON file containing quiz questions')
+    parser.add_argument('--form', '-f', help='Output form file', default='form.html')
+    parser.add_argument('--key', '-k', help='Output key file', default='key.json')
+    args = parser.parse_args()
+
+    with open(args.questions, 'r') as qfile:
+        questions = json.load(qfile)
+        generate_autograder_form(questions, args.form)
+        generate_quiz_key(questions, args.key)
