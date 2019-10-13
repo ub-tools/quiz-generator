@@ -34,7 +34,7 @@ to enter their answers.
             "help": "Failed Question Response"
         },
         {
-            "type": "tf"
+            "type": "tf",
             "name": "tf_question",
             "prompt": "Question Prompt",
             "answer": true,
